@@ -1,0 +1,20 @@
+{
+  "id": "whisper-box",
+  "title": "Whisper Box",
+  "description": "A module that allows you to create a dedicated whisper window (with history, and per player, if desired).",
+  "authors": [{ "name": "Richard Bellingham" }, { "name": "Jean-Baptiste Louvet" }],
+  "version": "3.0.6",
+  "esmodules": ["whisper-box.js"],
+  "styles": ["whisper-box.css"],
+  "compatibility": {
+    "minimum": "13.348",
+    "verified": "13.348",
+    "maximum": 13
+  },
+  "bugs": "https://github.com/samulopez/WhisperBox/issues",
+  "changelog": "https://github.com/samulopez/WhisperBox/releases",
+  "download": "https://github.com/samulopez/WhisperBox/releases/download/v3.0.6/module.zip",
+  "manifest": "https://github.com/samulopez/WhisperBox/releases/latest/download/module.json",
+  "readme": "https://raw.githubusercontent.com/samulopez/WhisperBox/main/README.md",
+  "url": "https://github.com/samulopez/WhisperBox"
+}
