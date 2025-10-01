@@ -1,0 +1,70 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      # run our gulp build action
+      - name: Build dist directory
+        run: npm run build
+
+      # create a zip file with all files required by the module to add to the release
+      - name: Zip Files
+        working-directory: ./dist
+        run: zip -r ./module.zip ./*
+
+      - name: set deployment outputs
+        id: set-pr-deploy-info
+        run: |
+          tag="${{ github.ref_name }}"
+          prerelease=false
+          # Check if the tag contains 'beta'
+          if [[ "$tag" == *"-beta."* ]]; then
+            prerelease=true
+          fi
+          echo "prerelease=$prerelease" >> $GITHUB_OUTPUT
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create a release for this specific version
+      - name: Create Release
+        id: create_version_release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true # set this to false if you want to prevent updating existing releases
+          name: ${{ github.ref_name }}
+          body: ${{steps.github_release.outputs.changelog}}
+          draft: false
+          prerelease: ${{ steps.set-pr-deploy-info.outputs.prerelease }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "./dist/whisper-box/module.json,./dist/module.zip"
+          tag: ${{ github.ref_name }}
+
+      # Publish this new version to the Foundry VTT Module Listing
+      # - name: Publish to Foundry VTT Repo
+      #   id: publish_foundry_repo
+      #   run: npx @ghost-fvtt/foundry-publish
+      #   env:
+      #     FVTT_DRY_RUN: ${{ steps.set-pr-deploy-info.outputs.prerelease }}
+      #     FVTT_MANIFEST_PATH: src/module.json
+      #     FVTT_TOKEN: ${{ secrets.FVTT_TOKEN }}
+      #     FVTT_MANIFEST_URL: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/module.json
