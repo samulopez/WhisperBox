@@ -3,7 +3,7 @@ name: release
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 jobs:
   build:
@@ -56,7 +56,7 @@ jobs:
           draft: false
           prerelease: ${{ steps.set-pr-deploy-info.outputs.prerelease }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "./dist/whisper-box/module.json,./dist/module.zip"
+          artifacts: './dist/whisper-box/module.json,./dist/module.zip'
           tag: ${{ github.ref_name }}
 
       # Publish this new version to the Foundry VTT Module Listing

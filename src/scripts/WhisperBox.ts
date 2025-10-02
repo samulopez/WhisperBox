@@ -1,6 +1,9 @@
 import { getGame } from './helpers';
+import { TEMPLATES } from './constants';
 
-class WhisperBox extends foundry.appv1.api.Application {
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
   data: { name: string; targetUser: string };
 
   user: string;
@@ -14,61 +17,32 @@ class WhisperBox extends foundry.appv1.api.Application {
     this.data = data;
     this.user = getGame().user?.id ?? '';
     this.combi = this.data.targetUser + this.user;
-
-    const historyContainer = $('<div></div>');
-    historyContainer.css({
-      flex: '1',
-      'min-height': '0',
-      overflow: 'hidden',
-    });
-
-    const whisperHistory = $('<ul></ul>');
-    whisperHistory.attr('id', `whisperTextHistory${this.combi}`);
-    whisperHistory.css({
-      'overflow-y': 'auto',
-      'overflow-x': 'hidden',
-      width: 'auto',
-      height: 'calc(100% - 60px)',
-      padding: '0',
-    });
-
-    historyContainer.append('<h2>History:</h2>');
-    historyContainer.append(whisperHistory);
-
-    const messageContainer = $('<div></div>');
-    messageContainer.css({
-      flex: '0 0 110px',
-    });
-
-    const whisperMessage = $('<textarea></textarea>');
-    whisperMessage.attr('rows', '4');
-    whisperMessage.attr('cols', '120');
-    whisperMessage.attr('name', 'whisperText');
-    whisperMessage.attr('id', `whisperTextId${this.combi}`);
-    whisperMessage.css({
-      background: 'white',
-      color: 'black',
-      'font-family': 'Arial',
-    });
-
-    messageContainer.append('<h2>Message:</h2>');
-    messageContainer.append(whisperMessage);
-
-    const appBody = $('<div></div>');
-
-    appBody.append(historyContainer);
-    appBody.append(messageContainer);
-
-    this.content = {
-      content: appBody.html(),
-    };
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    const whisperField = html.find(`textarea[id='whisperTextId${this.combi}']`);
-    whisperField.on('keyup', (event) => this._onEnterEvent(event));
-    this.getHistory();
+  static DEFAULT_OPTIONS = {
+    classes: ['whisperBox'],
+    tag: 'div',
+    position: { width: 400, height: 450 },
+    window: { resizable: true, minimizable: true },
+  };
+
+  static PARTS = {
+    content: {
+      template: TEMPLATES.whisperBox,
+    },
+  };
+
+  get title() {
+    return `Whispering to ${this.data.name}`;
+  }
+
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    const whisperField = this.element.querySelector('textarea');
+    if (!whisperField) return;
+    whisperField.addEventListener('keyup', (event) => this._onEnterEvent(event));
+    this.scrollHistory();
   }
 
   // The following code detects the enter key being released and then sends the message.
@@ -84,17 +58,23 @@ class WhisperBox extends foundry.appv1.api.Application {
     });
     whisper.value = '';
     whisper.focus();
-    this.getHistory();
   }
 
-  getHistory() {
-    const whisperHistory = $(`#whisperTextHistory${this.combi}`);
-    if (whisperHistory.length === 0) {
-      return;
-    }
+  scrollHistory() {
+    const whisperHistory = this.element.querySelector('ul');
+    if (!whisperHistory) return;
+    whisperHistory.scrollTop = whisperHistory.scrollHeight;
+  }
 
-    whisperHistory.html('');
+  async _postRender(context, options) {
+    await super._postRender(context, options);
+    // Timeout to ensure box is rendered before scrolling
+    setTimeout(() => {
+      this.scrollHistory();
+    }, 200);
+  }
 
+  async _prepareContext(options) {
     const relevantChatHistory =
       getGame().messages?.contents.filter(
         (msg) =>
@@ -102,42 +82,31 @@ class WhisperBox extends foundry.appv1.api.Application {
           (this.data.targetUser === msg.author?.id && this.user === msg.whisper[0])
       ) ?? [];
 
+    const messages: {
+      speaker: string | undefined;
+      whisperedTo: string | undefined;
+      content: string;
+      className: string;
+    }[] = [];
     relevantChatHistory.forEach((chatMessage) => {
       if (!chatMessage.whisper[0]) return;
       const speaker = chatMessage.speaker.alias ?? chatMessage.author?.name;
       const whisperedTo =
         getGame().users?.get(chatMessage.whisper[0])?.name ?? getGame().actors?.get(chatMessage.whisper[0])?.name;
-      const left = this.user === chatMessage.author?.id ? 5 : 55;
-      const right = this.data.targetUser === chatMessage.author?.id ? 5 : 55;
-      const chatMessageItem =
-        $(`<li class="chat-message message flexcol whisper" style="margin-right:${right}px; margin-left:${left}px">
-    <header class="message-header flexrow">
-        <h4 class="message-sender">${speaker}</h4>
-        <span class="message-metadata">
-            <span class="whisper-to">To: ${whisperedTo}</span>
-        </span>
-    </header>
-    <div class="message-content">
-        ${chatMessage.content}
-    </div>
-</li>`);
+      const className = this.user === chatMessage.author?.id ? 'sent-message' : 'received-message';
 
-      whisperHistory.append(chatMessageItem);
+      const message = {
+        speaker,
+        whisperedTo,
+        content: chatMessage.content,
+        className,
+      };
+      messages.push(message);
     });
 
-    // Timeout to ensure box is rendered before scrolling
-    setTimeout(() => {
-      this.scrollHistory();
-    }, 200);
-  }
-
-  scrollHistory() {
-    const whisperHistory = $(`#whisperTextHistory${this.combi}`);
-    whisperHistory.scrollTop(whisperHistory.prop('scrollHeight'));
-  }
-
-  getData() {
-    return this.content;
+    return foundry.utils.mergeObject(options, {
+      messages,
+    });
   }
 }
 
