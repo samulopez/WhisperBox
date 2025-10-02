@@ -50,7 +50,10 @@ export default defineConfig({
   },
   plugins: [
     copy({
-      targets: [{ src: 'src/module.json', dest: `./dist/${MODULE_ID}` }],
+      targets: [
+        { src: 'src/templates', dest: `./dist/${MODULE_ID}` },
+        { src: 'src/module.json', dest: `./dist/${MODULE_ID}` },
+      ],
       hook: 'writeBundle',
     }),
   ],
