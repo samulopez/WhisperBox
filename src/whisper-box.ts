@@ -48,8 +48,13 @@ Hooks.on('ready', () => {
     };
   }
 
-  Hooks.on('renderChatMessageHTML', (data) => {
-    whisperBoxManager.getHistoryExistingBoxes();
+  Hooks.on('renderChatMessageHTML', (data, element, context) => {
+    // ignore chat card notifications
+    // @ts-expect-error
+    if (!context.canClose) {
+      whisperBoxManager.getHistoryExistingBoxes();
+    }
+
     if (!getGame().settings.get(MODULE_ID, MySettings.openBoxOnAllWhispers)) {
       return;
     }
