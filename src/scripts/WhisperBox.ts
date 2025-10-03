@@ -104,7 +104,8 @@ class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
       messages.push(message);
     });
 
-    return foundry.utils.mergeObject(options, {
+    const parentContext = await super._prepareContext(options);
+    return foundry.utils.mergeObject(parentContext, {
       messages,
     });
   }
