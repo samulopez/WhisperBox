@@ -1,6 +1,6 @@
 import { WhisperBoxManager } from './scripts/WhisperBoxManager';
 import { registerSettings } from './scripts/settings';
-import { getGame } from './scripts/helpers';
+import { getGame, getLocalization } from './scripts/helpers';
 import { MODULE_ID, MySettings } from './scripts/constants';
 
 import './styles/style.css';
@@ -16,9 +16,9 @@ Hooks.on('renderTokenHUD', (hudButtons, html, data) => {
     return;
   }
 
-  const button = `<button type="button" class="button control-icon whisperBox"><i class="fa fa-user-secret"></i></div>`;
   const col = html.querySelector('.col.left');
   if (!col) return;
+  const button = `<button type="button" class="control-icon whisperBox" data-tooltip="whisper-box.actions.open"><i class="fa fa-user-secret"></i></button>`;
   col.insertAdjacentHTML('beforeend', button);
   const buttonEl = html.querySelector('button.whisperBox');
   buttonEl?.addEventListener('click', async () => {
@@ -78,7 +78,7 @@ Hooks.on('ready', () => {
 
 Hooks.on('getUserContextOptions', (html, contextOptions) => {
   contextOptions.push({
-    name: 'Open whisper box',
+    name: getLocalization().localize('whisper-box.actions.open'),
     icon: '<i class="fas fa-comments"></i>',
     condition: () => true,
     callback: (li) => {

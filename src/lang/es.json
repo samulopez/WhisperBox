@@ -1,0 +1,23 @@
+{
+  "whisper-box": {
+    "box": {
+      "title": "Susurrando a {name}",
+      "history": "Historial",
+      "message": "Mensaje",
+      "to": "A"
+    },
+    "actions": {
+      "open": "Abrir ventana de susurros"
+    },
+    "settings": {
+      "openBoxOnAllWhispers": {
+        "name": "Abrir ventana en todos los susurros",
+        "hint": "Abre la ventana al enviar o recibir un susurro, y no solo al usar el botón o macro."
+      },
+      "showCharacterName": {
+        "name": "Mostrar nombre del personaje en la ventana",
+        "hint": "Muestra el nombre del personaje principal del usuario si está disponible."
+      }
+    }
+  }
+}

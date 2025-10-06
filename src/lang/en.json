@@ -1,0 +1,23 @@
+{
+  "whisper-box": {
+    "box": {
+      "title": "Whispering to {name}",
+      "history": "History",
+      "message": "Message",
+      "to": "To"
+    },
+    "actions": {
+      "open": "Open whisper box"
+    },
+    "settings": {
+      "openBoxOnAllWhispers": {
+        "name": "Open box on all whispers",
+        "hint": "Opens the box on whisper sending or receiving, and not just by using the button or macro."
+      },
+      "showCharacterName": {
+        "name": "Show character name on box",
+        "hint": "Shows the user's main character name if available."
+      }
+    }
+  }
+}

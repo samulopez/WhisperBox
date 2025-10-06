@@ -1,13 +1,13 @@
 <div class="dialog-content">
     <div class="history">
-        <h2>History:</h2>
+        <h2>{{localize 'whisper-box.box.history'}}:</h2>
         <ul class="messages-list">
             {{#each messages as |message id| }}
                 <li class="chat-message message flexcol whisper {{message.className}}" >
                     <header class="message-header flexrow">
                         <h4 class="message-sender">{{message.speaker}}</h4>
                         <span class="message-metadata">
-                            <span class="whisper-to">To: {{message.whisperedTo}}</span>
+                            <span class="whisper-to">{{localize 'whisper-box.box.to'}}: {{message.whisperedTo}}</span>
                         </span>
                     </header>
                     <div class="message-content">
@@ -18,7 +18,7 @@
         </ul>
     </div>
     <div class="message-form">
-        <h2>Message:</h2>
+        <h2>{{localize 'whisper-box.box.message'}}:</h2>
         <textarea rows="4" cols="120" name="whisperText"></textarea>
     </div>
 </div>
