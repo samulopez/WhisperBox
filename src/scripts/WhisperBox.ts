@@ -1,3 +1,5 @@
+import { WhisperBoxChatMessage } from '../types';
+
 import { getGame, getLocalization } from './helpers';
 import { TEMPLATES } from './constants';
 
@@ -39,6 +41,13 @@ class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
 
+    const dragDrop = new foundry.applications.ux.DragDrop({
+      dragSelector: '.whisper-textarea',
+      dropSelector: '.whisper-textarea',
+      callbacks: { drop: this._onDrop.bind(this) },
+    });
+    dragDrop.bind(this.element);
+
     const whisperField = this.element.querySelector('textarea');
     if (!whisperField) return;
     whisperField.addEventListener('keyup', (event) => this._onEnterEvent(event));
@@ -46,14 +55,18 @@ class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   // The following code detects the enter key being released and then sends the message.
-  async _onEnterEvent(event) {
-    if (event.keyCode !== 13) {
+  async _onEnterEvent(event: KeyboardEvent) {
+    if ((event.code !== 'Enter' && event.key !== 'Enter') || event.shiftKey) {
       return;
     }
 
     const whisper = event.target;
+    if (!(whisper instanceof HTMLTextAreaElement)) return;
+    const value = whisper.value.trim();
+    if (!value) return;
+
     await foundry.documents.ChatMessage.create({
-      content: whisper.value,
+      content: value.replace(/\n/g, '<br>'),
       whisper: [this.data.targetUser],
     });
     whisper.value = '';
@@ -82,32 +95,49 @@ class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
           (this.data.targetUser === msg.author?.id && this.user === msg.whisper[0])
       ) ?? [];
 
-    const messages: {
-      speaker: string | undefined;
-      whisperedTo: string | undefined;
-      content: string;
-      className: string;
-    }[] = [];
-    relevantChatHistory.forEach((chatMessage) => {
-      if (!chatMessage.whisper[0]) return;
-      const speaker = chatMessage.speaker.alias ?? chatMessage.author?.name;
-      const whisperedTo =
-        getGame().users?.get(chatMessage.whisper[0])?.name ?? getGame().actors?.get(chatMessage.whisper[0])?.name;
-      const className = this.user === chatMessage.author?.id ? 'sent-message' : 'received-message';
+    const messages: WhisperBoxChatMessage[] = await Promise.all(
+      relevantChatHistory.map(async (chatMessage) => {
+        if (!chatMessage.whisper[0])
+          return {
+            speaker: undefined,
+            whisperedTo: undefined,
+            content: chatMessage.content,
+            className: '',
+          };
+        const speaker = chatMessage.speaker.alias ?? chatMessage.author?.name;
+        const whisperedTo =
+          getGame().users?.get(chatMessage.whisper[0])?.name ?? getGame().actors?.get(chatMessage.whisper[0])?.name;
+        const className = this.user === chatMessage.author?.id ? 'sent-message' : 'received-message';
 
-      const message = {
-        speaker,
-        whisperedTo,
-        content: chatMessage.content,
-        className,
-      };
-      messages.push(message);
-    });
+        return {
+          speaker,
+          whisperedTo,
+          content: await foundry.applications.ux.TextEditor.implementation.enrichHTML(chatMessage.content),
+          className,
+        };
+      })
+    );
 
     const parentContext = await super._prepareContext(options);
     return foundry.utils.mergeObject(parentContext, {
       messages,
     });
+  }
+
+  async _onDrop(event) {
+    event.stopPropagation();
+
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    if (!data) return;
+
+    const whisperField = this.element.querySelector('textarea');
+    if (!whisperField) return;
+
+    const contentLink = await foundry.applications.ux.TextEditor.implementation.getContentLink(data);
+    if (!contentLink) return;
+
+    whisperField.value += contentLink;
+    whisperField.focus();
   }
 }
 

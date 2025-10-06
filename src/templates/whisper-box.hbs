@@ -11,7 +11,7 @@
                         </span>
                     </header>
                     <div class="message-content">
-                        {{message.content}}
+                        {{{message.content}}}
                     </div>
                 </li>
             {{/each}}
@@ -19,6 +19,6 @@
     </div>
     <div class="message-form">
         <h2>{{localize 'whisper-box.box.message'}}:</h2>
-        <textarea rows="4" cols="120" name="whisperText"></textarea>
+        <textarea rows="4" cols="120" name="whisperText" class="whisper-textarea"></textarea>
     </div>
 </div>
