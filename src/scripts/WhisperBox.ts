@@ -1,4 +1,4 @@
-import { getGame } from './helpers';
+import { getGame, getLocalization } from './helpers';
 import { TEMPLATES } from './constants';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -33,7 +33,7 @@ class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
   };
 
   get title() {
-    return `Whispering to ${this.data.name}`;
+    return getLocalization().format('whisper-box.box.title', { name: this.data.name });
   }
 
   async _onRender(context, options) {
