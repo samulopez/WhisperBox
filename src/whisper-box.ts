@@ -3,7 +3,7 @@ import { registerSettings } from './scripts/settings';
 import { getGame, getLocalization } from './scripts/helpers';
 import { MODULE_ID, MySettings } from './scripts/constants';
 
-import './styles/style.css';
+import './styles/style.scss';
 
 let whisperBoxManager: WhisperBoxManager;
 
