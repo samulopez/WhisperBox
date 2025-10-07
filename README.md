@@ -2,6 +2,8 @@
 
 A small module for Foundry VTT that adds the ability to create a dedicated box for whispering to a specific player. The box includes a history of all whispers between you and that player.
 
+![Whisper Box.](readme-img/whisper-box.png)
+
 ## Usage
 
 From the user context menu, you can open a whisper box to any player.
