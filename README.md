@@ -13,7 +13,13 @@ From the user context menu, you can open a whisper box to any player.
 From the token context menu, you can open a whisper box to the owner of that token.
 ![Token context options.](readme-img/token-context-options.png)
 
-There's also a setting to launch whisper box automatically when you receive a whisper.
+There's a button next to the roll privacy buttons to select the users.
+
+![Whisper box button.](readme-img/whisper-box-button.png)
+
+![Whisper box selector.](readme-img/whisper-select.png)
+
+There's also a setting to launch whisper box automatically when you receive or send a whisper.
 
 ## Acknowledgements
 
