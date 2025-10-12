@@ -11,4 +11,10 @@ declare module 'fvtt-types/configuration' {
     'whisper-box.openBoxOnAllWhispers': boolean;
     'whisper-box.showCharacterName': boolean;
   }
+
+  namespace Hooks {
+    interface HookConfig {
+      renderChatInput: () => void;
+    }
+  }
 }

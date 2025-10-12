@@ -3,16 +3,14 @@
         <h2>{{localize 'whisper-box.box.history'}}:</h2>
         <ul class="messages-list">
             {{#each messages as |message id| }}
-                <li class="chat-message message flexcol whisper {{message.className}}" >
+                <li class="chat-message message flexcol whisper {{message.className}}">
                     <header class="message-header flexrow">
                         <h4 class="message-sender">{{message.speaker}}</h4>
                         <span class="message-metadata">
                             <span class="whisper-to">{{localize 'whisper-box.box.to'}}: {{message.whisperedTo}}</span>
                         </span>
                     </header>
-                    <div class="message-content">
-                        {{{message.content}}}
-                    </div>
+                    <div class="message-content">{{{message.content}}}</div>
                 </li>
             {{/each}}
         </ul>

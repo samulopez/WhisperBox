@@ -9,13 +9,13 @@ class WhisperBoxManager extends foundry.applications.api.ApplicationV2 {
     this.existingBoxes = {};
   }
 
-  createWhisperBox(data: { name: string; targetUser: string }): void {
-    const { targetUser } = data;
+  createWhisperBox(data: { name: string; targetUsers: string[] }): void {
+    const { targetUsers } = data;
 
     const { user } = getGame();
     if (!user) return;
 
-    const combi = targetUser + user.id;
+    const combi = targetUsers.join(',') + user.id;
 
     let whisperBox = this.existingBoxes[combi];
     if (!whisperBox) {
