@@ -7,7 +7,11 @@
       "to": "To"
     },
     "actions": {
-      "open": "Open whisper box"
+      "open": "Open whisper box",
+      "create": "Create a whisper box",
+      "selectUsers": "Select the users",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
     },
     "settings": {
       "openBoxOnAllWhispers": {

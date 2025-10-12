@@ -7,7 +7,11 @@
       "to": "A"
     },
     "actions": {
-      "open": "Abrir ventana de susurros"
+      "open": "Abrir ventana de susurros",
+      "create": "Crear una ventana de susurros",
+      "selectUsers": "Selecciona los usuarios",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
     },
     "settings": {
       "openBoxOnAllWhispers": {
