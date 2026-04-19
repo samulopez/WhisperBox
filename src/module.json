@@ -28,8 +28,8 @@
   ],
   "compatibility": {
     "minimum": "13.348",
-    "verified": "13.350",
-    "maximum": 13
+    "verified": 14,
+    "maximum": 14
   },
   "bugs": "https://github.com/samulopez/WhisperBox/issues",
   "changelog": "https://github.com/samulopez/WhisperBox/releases",

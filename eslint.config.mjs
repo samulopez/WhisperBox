@@ -1,13 +1,17 @@
+/**
+ * THIS FILE WAS AUTO-GENERATED.
+ * PLEASE DO NOT EDIT IT MANUALLY.
+ * ===============================
+ * IF YOU'RE COPYING THIS INTO AN ESLINT CONFIG, REMOVE THIS COMMENT BLOCK.
+ */
+
 import path from 'node:path';
 
-import eslintPluginYml from 'eslint-plugin-yml';
-import prettierPlugin from 'eslint-plugin-prettier';
-import { rules as prettierConfigRules } from 'eslint-config-prettier';
-import { configs, plugins } from 'eslint-config-airbnb-extended';
-import { globalIgnores } from 'eslint/config';
-import json from '@eslint/json';
-import js from '@eslint/js';
 import { includeIgnoreFile } from '@eslint/compat';
+import js from '@eslint/js';
+import { configs, plugins, rules } from 'eslint-config-airbnb-extended';
+import { rules as prettierConfigRules } from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 const gitignorePath = path.resolve('.', '.gitignore');
 
@@ -15,7 +19,6 @@ const jsConfig = [
   // ESLint Recommended Rules
   {
     name: 'js/config',
-    files: ['**/*.js', '**/*.mjs'],
     ...js.configs.recommended,
   },
   // Stylistic Plugin
@@ -24,6 +27,8 @@ const jsConfig = [
   plugins.importX,
   // Airbnb Base Recommended Config
   ...configs.base.recommended,
+  // Strict Import Config
+  rules.base.importsStrict,
 ];
 
 const nodeConfig = [
@@ -38,6 +43,8 @@ const typescriptConfig = [
   plugins.typescriptEslint,
   // Airbnb Base TypeScript Config
   ...configs.base.typescript,
+  // Strict TypeScript Config
+  rules.typescript.typescriptEslintStrict,
   {
     files: ['**/*.js', '**/*.cjs', '**/*.mjs', '**/*.jsx', '**/*.ts', '**/*.cts', '**/*.mts', '**/*.tsx', '**/*.d.ts'],
     rules: {
@@ -46,7 +53,7 @@ const typescriptConfig = [
         {
           'newlines-between': 'always',
           alphabetize: {
-            order: 'desc',
+            order: 'asc',
             caseInsensitive: true,
           },
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'type'],
@@ -56,17 +63,8 @@ const typescriptConfig = [
       'import-x/prefer-default-export': 'off',
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
     },
-  },
-];
-
-const jsonConfig = [
-  {
-    name: 'json/config',
-    files: ['**/*.json'],
-    ignores: ['**/package-lock.json'],
-    language: 'json/json',
-    ...json.configs.recommended,
   },
 ];
 
@@ -91,17 +89,12 @@ const prettierConfig = [
 export default [
   // Ignore .gitignore files/folder in eslint
   includeIgnoreFile(gitignorePath),
-  globalIgnores(['./src/Whisperbox Macro.js']),
   // Javascript Config
   ...jsConfig,
   // Node Config
   ...nodeConfig,
   // TypeScript Config
   ...typescriptConfig,
-  // JSON Config
-  ...jsonConfig,
-  // YAML Config
-  ...eslintPluginYml.configs['flat/recommended'],
   // Prettier Config
   ...prettierConfig,
 ];

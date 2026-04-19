@@ -1,4 +1,4 @@
-import { WhisperBoxApi } from './types';
+import type { WhisperBoxApi } from './types';
 
 declare module 'fvtt-types/configuration' {
   interface ModuleConfig {

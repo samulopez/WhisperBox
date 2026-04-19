@@ -1,7 +1,7 @@
-import { WhisperBoxChatMessage } from '../types';
-
-import { getGame, getLocalization } from './helpers';
 import { MODULE_ID, MySettings, TEMPLATES } from './constants';
+import { getGame, getLocalization } from './helpers';
+
+import type { WhisperBoxChatMessage } from '../types';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -50,7 +50,7 @@ class WhisperBox extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const whisperField = this.element.querySelector('textarea');
     if (!whisperField) return;
-    whisperField.addEventListener('keyup', (event) => this._onEnterEvent(event));
+    whisperField.addEventListener('keyup', async (event) => this._onEnterEvent(event));
     this.scrollHistory();
   }
 
