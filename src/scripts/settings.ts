@@ -1,5 +1,5 @@
-import { getGame, getLocalization } from './helpers';
 import { MODULE_ID, MySettings } from './constants';
+import { getGame, getLocalization } from './helpers';
 
 export const registerSettings = () => {
   getGame().settings.register(MODULE_ID, MySettings.openBoxOnAllWhispers, {

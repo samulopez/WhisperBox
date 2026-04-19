@@ -1,8 +1,8 @@
-import { createWhisperBoxSelector } from './scripts/whisperBoxSelector';
-import { WhisperBoxManager } from './scripts/WhisperBoxManager';
-import { registerSettings } from './scripts/settings';
-import { getGame, getLocalization } from './scripts/helpers';
 import { MODULE_ID, MySettings } from './scripts/constants';
+import { getGame, getLocalization } from './scripts/helpers';
+import { registerSettings } from './scripts/settings';
+import { WhisperBoxManager } from './scripts/WhisperBoxManager';
+import { createWhisperBoxSelector } from './scripts/whisperBoxSelector';
 
 import './styles/style.scss';
 
@@ -11,7 +11,7 @@ let whisperBoxManager: WhisperBoxManager;
 // Adds the button to the token HUD
 Hooks.on('renderTokenHUD', (hudButtons, html, data) => {
   const users = getGame().users?.contents ?? [];
-  // @ts-expect-error
+  // @ts-expect-error types not updated yet
   const targetUser = users.find((user) => user?.character?.id === data.actorId);
 
   if (!targetUser) {
@@ -52,7 +52,7 @@ Hooks.on('ready', () => {
 
   Hooks.on('renderChatMessageHTML', (data, element, context) => {
     // ignore chat card notifications
-    // @ts-expect-error
+    // @ts-expect-error types not updated yet
     if (!context.canClose) {
       whisperBoxManager.getHistoryExistingBoxes();
     }

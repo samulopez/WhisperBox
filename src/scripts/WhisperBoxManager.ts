@@ -1,5 +1,5 @@
-import { WhisperBox } from './WhisperBox';
 import { getGame } from './helpers';
+import { WhisperBox } from './WhisperBox';
 
 class WhisperBoxManager extends foundry.applications.api.ApplicationV2 {
   existingBoxes: Record<string, WhisperBox>;

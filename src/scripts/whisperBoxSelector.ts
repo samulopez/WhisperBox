@@ -1,6 +1,7 @@
-import { WhisperBoxManager } from './WhisperBoxManager';
-import { getGame, getLocalization } from './helpers';
 import { MODULE_ID, MySettings } from './constants';
+import { getGame, getLocalization } from './helpers';
+
+import type { WhisperBoxManager } from './WhisperBoxManager';
 
 export const createWhisperBoxSelector = (whisperBoxManager: WhisperBoxManager) => {
   const content = (getGame().users?.contents ?? []).map((user) => {
@@ -41,6 +42,7 @@ export const createWhisperBoxSelector = (whisperBoxManager: WhisperBoxManager) =
 
       const showCharacterName = getGame().settings.get(MODULE_ID, MySettings.showCharacterName);
       const name = selectedUsers
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         .map((el) => (showCharacterName && el.dataset.characterName) || el.dataset.name)
         .join(', ');
 

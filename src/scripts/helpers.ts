@@ -1,6 +1,6 @@
 interface LocalizationHelper {
   localize: (key: string) => string;
-  format(stringId: string, data?: Record<string, string>): string;
+  format: (stringId: string, data?: Record<string, string>) => string;
 }
 
 export const getGame = (): foundry.Game => {
